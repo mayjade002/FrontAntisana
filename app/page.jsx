@@ -6,7 +6,12 @@ import { Carousel } from 'react-responsive-carousel';
 export default function Home() {
   return (
     <div style={styles.page}>
-      {/* Carrusel de pantalla completa */}
+      {/* Encabezado */}
+      <header style={styles.header}>
+        <h1 style={styles.headerTitle}>Volcán Antisana - Fuente de Vida y Conservación</h1>
+      </header>
+
+      {/* Carrusel principal */}
       <section style={styles.fullscreenCarousel}>
         <Carousel
           showThumbs={false}
@@ -34,18 +39,13 @@ export default function Home() {
         </Carousel>
       </section>
 
-      {/* Sección Ubicación */}
+      {/* Qué es el Antisana */}
       <section style={styles.section}>
-        <h2 style={styles.titleDecorado}>📍 ¿Dónde está el Antisana?</h2>
-
+        <h2 style={styles.titleDecorado}>🗺️ ¿Qué es el Antisana?</h2>
         <div style={styles.infoGrid}>
           <div style={styles.infoBox}>
-            <p style={styles.text}>🗻 <strong>Altura:</strong> 5.758 m s. n. m.</p>
-            <p style={styles.text}>🌎 <strong>Ubicación:</strong> Cordillera Oriental de los Andes</p>
-            <p style={styles.text}>💧 <strong>Importancia:</strong> Fuente hídrica vital para Quito</p>
-            <p style={styles.text}>🌿 <strong>Conservación:</strong> En la Reserva Ecológica Antisana</p>
+            <p style={styles.text}>El Antisana es un estratovolcán ubicado en la cordillera oriental de los Andes ecuatorianos. Su altitud de 5.758 metros y sus glaciares lo convierten en una de las principales fuentes hídricas para la ciudad de Quito. Forma parte de una importante reserva ecológica que protege ecosistemas únicos y especies en peligro.</p>
           </div>
-
           <div style={styles.mapCard}>
             <iframe
               title="Ubicación Antisana"
@@ -60,7 +60,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Sección Propuesta */}
+      {/* Flora y Fauna */}
+      <section style={styles.section}>
+        <div style={styles.infoGrid}>
+          <div style={styles.cardBox}>
+            <h3 style={styles.titleDecorado}>🌿 Flora del Antisana</h3>
+            <Carousel showThumbs={false} infiniteLoop autoPlay showStatus={false}>
+              <div>
+                <img src="/flora1.jpg" alt="Flora 1" style={styles.imageSmall} />
+              </div>
+              <div>
+                <img src="/flora2.jpg" alt="Flora 2" style={styles.imageSmall} />
+              </div>
+            </Carousel>
+            <p style={styles.text}>En la reserva crecen especies únicas como frailejones, polylepis y orquídeas andinas, adaptadas al clima frío de alta montaña.</p>
+          </div>
+          <div style={styles.cardBox}>
+            <h3 style={styles.titleDecorado}>🦅 Fauna del Antisana</h3>
+            <Carousel showThumbs={false} infiniteLoop autoPlay showStatus={false}>
+              <div>
+                <img src="/fauna1.jpg" alt="Fauna 1" style={styles.imageSmall} />
+              </div>
+              <div>
+                <img src="/fauna2.jpg" alt="Fauna 2" style={styles.imageSmall} />
+              </div>
+            </Carousel>
+            <p style={styles.text}>El cóndor andino, el venado de cola blanca, el oso de anteojos y varias aves migratorias habitan esta zona protegida.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Propuesta */}
       <section id="propuesta" style={styles.propuestaSection}>
         <h2 style={styles.titleLight}>Nuestra Propuesta</h2>
         <p style={styles.textLight}>
@@ -79,6 +109,16 @@ const styles = {
     fontFamily: 'Segoe UI, sans-serif',
     backgroundColor: '#f5f7fa',
   },
+  header: {
+    backgroundColor: '#003f5c',
+    color: 'white',
+    textAlign: 'center',
+    padding: '2rem',
+  },
+  headerTitle: {
+    fontSize: '2.8rem',
+    margin: 0,
+  },
   fullscreenCarousel: {
     height: '100vh',
     width: '100%',
@@ -90,13 +130,13 @@ const styles = {
   },
   section: {
     padding: '4rem 2rem',
-    maxWidth: '1000px',
+    maxWidth: '1100px',
     margin: '0 auto',
   },
   titleDecorado: {
-    fontSize: '2.4rem',
+    fontSize: '1.8rem',
     textAlign: 'center',
-    marginBottom: '2.5rem',
+    marginBottom: '1.5rem',
     color: '#0070f3',
     borderBottom: '2px solid #00bcd4',
     display: 'inline-block',
@@ -116,7 +156,7 @@ const styles = {
     alignItems: 'flex-start',
   },
   infoBox: {
-    flex: '1 1 300px',
+    flex: '1 1 400px',
     backgroundColor: '#ffffff',
     padding: '1.5rem',
     borderRadius: '12px',
@@ -127,6 +167,20 @@ const styles = {
     borderRadius: '12px',
     overflow: 'hidden',
     boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+  },
+  cardBox: {
+    flex: '1 1 400px',
+    backgroundColor: '#ffffff',
+    padding: '1.5rem',
+    borderRadius: '12px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+    textAlign: 'center',
+  },
+  imageSmall: {
+    width: '100%',
+    borderRadius: '8px',
+    height: '200px',
+    objectFit: 'cover',
   },
   propuestaSection: {
     backgroundColor: '#1c2b3a',
