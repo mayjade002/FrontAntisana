@@ -8,42 +8,36 @@ export default function Propuesta() {
   const archivos = [
     {
       archivo: 'P55-Antisana_Diguchi_Precipitación-Mensual.csv',
-      tipo: 'bar',
       titulo: 'Precipitación Mensual - Diguchi'
     },
     {
       archivo: 'P43-Antisana_Limboasi_Precipitación-Mensual.csv',
-      tipo: 'bar',
       titulo: 'Precipitación Mensual - Limboasi'
     },
     {
       archivo: 'P42-Antisana_Ramón_Huañuna_Precipitación-Mensual.csv',
-      tipo: 'bar',
       titulo: 'Precipitación Mensual - Ramón Huañuna'
     },
     {
       archivo: 'H55-Río_Antisana_AC_Nivel_de_agua-Mensual.csv',
-      tipo: 'trend',
       titulo: 'Nivel de Agua - Río Antisana AC'
     },
     {
       archivo: 'H44-Antisana_DJ_Diguchi_Nivel_de_agua-Mensual.csv',
-      tipo: 'trend',
       titulo: 'Nivel de Agua - DJ Diguchi'
     }
   ];
 
+  // 1. Cargar HTML interactivo de cada gráfico
   useEffect(() => {
     const fetchCharts = async () => {
       const results = {};
       for (const item of archivos) {
         try {
-          const endpoint = item.tipo === 'bar'
-            ? `http://localhost:8000/bar/${item.archivo}`
-            : `http://localhost:8000/trend/${item.archivo}`;
+          const endpoint = `http://localhost:8000/interactive/${item.archivo}`;
           const res = await fetch(endpoint);
-          const data = await res.json();
-          results[item.titulo] = `data:image/png;base64,${data.image}`;
+          const html = await res.text();
+          results[item.titulo] = html;
         } catch (err) {
           console.error('Error cargando gráfico:', item.archivo, err);
         }
@@ -53,7 +47,40 @@ export default function Propuesta() {
     fetchCharts();
   }, []);
 
-  return (
+  // 2. Ejecutar scripts de Plotly cuando los gráficos ya estén en el DOM
+  useEffect(() => {
+  if (Object.keys(charts).length === 0) return;
+
+  // Verificar si Plotly ya está cargado
+  if (!window.Plotly) {
+    const script = document.createElement("script");
+    script.src = "https://cdn.plot.ly/plotly-3.0.1.min.js"; // la misma versión que genera el backend
+    script.async = true;
+    script.onload = () => ejecutarScripts();
+    document.head.appendChild(script);
+  } else {
+    ejecutarScripts();
+  }
+
+  function ejecutarScripts() {
+    const chartDivs = document.querySelectorAll('[id^="plotly-chart-"]');
+    chartDivs.forEach(div => {
+      const scripts = div.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        newScript.type = oldScript.type || "text/javascript";
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        oldScript.replaceWith(newScript);
+      });
+    });
+  }
+}, [charts]);
+
+return (
     <div style={styles.background}>
       <div style={styles.content}>
         <h1 style={styles.title}>Nuestra Propuesta</h1>
@@ -67,22 +94,12 @@ export default function Propuesta() {
           Estas gráficas representan el análisis mensual de la precipitación y del nivel de agua en dos zonas clave del sistema hídrico del Antisana. Las estaciones de monitoreo muestran cómo varía la cantidad de lluvia y el nivel del agua entre meses y años, revelando patrones estacionales, eventos extremos y anomalías hidrometeorológicas. Esta información sustenta la necesidad de un sistema predictivo que permita alertar a tiempo sobre posibles riesgos como crecidas, desbordamientos o sequías.
         </p>
 
-        <h2 style={styles.subtitle}>Análisis de Precipitación</h2>
+        <h2 style={styles.subtitle}>Análisis Interactivo de Precipitación y Nivel de Agua</h2>
         <div style={styles.rowContainer}>
-          {Object.entries(charts).filter(([titulo]) => titulo.includes('Precipitación')).map(([titulo, src]) => (
+          {Object.entries(charts).map(([titulo, html], index) => (
             <div key={titulo} style={styles.chartCard}>
               <h3 style={styles.chartTitle}>{titulo}</h3>
-              <img src={src} alt={titulo} style={styles.chartImageSmall} />
-            </div>
-          ))}
-        </div>
-
-        <h2 style={styles.subtitle}>Análisis de Nivel de Agua</h2>
-        <div style={styles.rowContainer}>
-          {Object.entries(charts).filter(([titulo]) => titulo.includes('Nivel de Agua')).map(([titulo, src]) => (
-            <div key={titulo} style={styles.chartCard}>
-              <h3 style={styles.chartTitle}>{titulo}</h3>
-              <img src={src} alt={titulo} style={styles.chartImageSmall} />
+              <div id={`plotly-chart-${index}`} dangerouslySetInnerHTML={{ __html: html }} />
             </div>
           ))}
         </div>
@@ -154,7 +171,7 @@ const styles = {
     marginBottom: '2.5rem',
   },
   chartCard: {
-    flex: '1 1 calc(33% - 1rem)',
+    flex: '1 1 calc(48% - 1rem)',
     backgroundColor: '#2a4f8d',
     borderRadius: '8px',
     padding: '1rem',
@@ -164,11 +181,6 @@ const styles = {
     fontSize: '1.1rem',
     marginBottom: '0.5rem',
     fontWeight: 'bold',
-  },
-  chartImageSmall: {
-    width: '100%',
-    borderRadius: '6px',
-    border: '2px solid white',
   },
   button: {
     backgroundColor: '#00bcd4',
