@@ -72,6 +72,12 @@ export default function Home() {
               <div>
                 <img src="/flora2.jpg" alt="Flora 2" style={styles.imageSmall} />
               </div>
+              <div>
+                <img src="/flora3.jpg" alt="Flora 3" style={styles.imageSmall} />
+              </div>
+              <div>
+                <img src="/flora4.jpg" alt="Flora 4" style={styles.imageSmall} />
+              </div>
             </Carousel>
             <p style={styles.text}>En la reserva crecen especies únicas como frailejones, polylepis y orquídeas andinas, adaptadas al clima frío de alta montaña.</p>
           </div>
@@ -79,10 +85,16 @@ export default function Home() {
             <h3 style={styles.titleDecorado}>🦅 Fauna del Antisana</h3>
             <Carousel showThumbs={false} infiniteLoop autoPlay showStatus={false}>
               <div>
-                <img src="/fauna1.jpg" alt="Fauna 1" style={styles.imageSmall} />
+                <img src="/fauna1.jpeg" alt="Fauna 1" style={styles.imageSmall} />
               </div>
               <div>
                 <img src="/fauna2.jpg" alt="Fauna 2" style={styles.imageSmall} />
+              </div>
+              <div>
+                <img src="/fauna3.jpg" alt="Fauna 3" style={styles.imageSmall} />
+              </div>
+              <div>
+                <img src="/fauna4.jpg" alt="Fauna 4" style={styles.imageSmall} />
               </div>
             </Carousel>
             <p style={styles.text}>El cóndor andino, el venado de cola blanca, el oso de anteojos y varias aves migratorias habitan esta zona protegida.</p>
