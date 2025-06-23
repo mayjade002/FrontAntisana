@@ -1,9 +1,16 @@
 'use client';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
-export default function Propuesta() {
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import {
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
+} from 'recharts';
+
+export default function PrototipoInteractivo() {
+  const [lluviaPrediccion, setLluviaPrediccion] = useState(null);
+  const [sequiaPrediccion, setSecaPrediccion] = useState(null);
   const [charts, setCharts] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const archivos = [
     {
@@ -33,7 +40,28 @@ export default function Propuesta() {
     }
   ];
 
+  const datosLluvia = [
+    { mes: 'Ene', probabilidad: 20 },
+    { mes: 'Feb', probabilidad: 30 },
+    { mes: 'Mar', probabilidad: 50 },
+    { mes: 'Abr', probabilidad: 80 },
+    { mes: 'May', probabilidad: 70 },
+    { mes: 'Jun', probabilidad: 60 },
+  ];
+
+  const datosSeca = [
+    { mes: 'Ene', probabilidad: 80 },
+    { mes: 'Feb', probabilidad: 70 },
+    { mes: 'Mar', probabilidad: 60 },
+    { mes: 'Abr', probabilidad: 30 },
+    { mes: 'May', probabilidad: 40 },
+    { mes: 'Jun', probabilidad: 50 },
+  ];
+
   useEffect(() => {
+    setLluviaPrediccion({ tendencia: datosLluvia, porcentaje: 70 });
+    setSecaPrediccion({ tendencia: datosSeca, porcentaje: 65 });
+
     const fetchCharts = async () => {
       const results = {};
       for (const item of archivos) {
@@ -49,45 +77,83 @@ export default function Propuesta() {
         }
       }
       setCharts(results);
+      setLoading(false);
     };
     fetchCharts();
   }, []);
 
   return (
     <div style={styles.background}>
-      <div style={styles.content}>
+      <div style={styles.container}>
         <h1 style={styles.title}>Nuestra Propuesta</h1>
 
         <p style={styles.text}>
-          Desarrollar un sistema de predicción de precipitaciones que integre datos históricos, permitiendo anticipar y predecir con precisión los niveles de precipitación y emitir alertas tempranas efectivas para prevenir desbordamientos y sequías que afecten a la comunidad, reduciendo así el riesgo de daños y pérdidas humanas y materiales.
+          Esta propuesta nace del análisis de datos recopilados por sensores ubicados estratégicamente en la cuenca del Antisana. Nuestro objetivo es anticipar eventos extremos mediante un sistema de predicción de precipitaciones, permitiendo la prevención de desbordamientos y sequías que afectan directamente a las comunidades.
         </p>
 
         <h2 style={styles.subtitle}>¿Por qué mostrar estas gráficas?</h2>
         <p style={styles.text}>
-          Estas gráficas representan el análisis mensual de la precipitación y del nivel de agua en dos zonas clave del sistema hídrico del Antisana. Las estaciones de monitoreo muestran cómo varía la cantidad de lluvia y el nivel del agua entre meses y años, revelando patrones estacionales, eventos extremos y anomalías hidrometeorológicas. Esta información sustenta la necesidad de un sistema predictivo que permita alertar a tiempo sobre posibles riesgos como crecidas, desbordamientos o sequías.
+          Estas gráficas representan el análisis mensual de la precipitación y nivel de agua de distintas estaciones en el Antisana. Nos permiten identificar patrones, anomalías y sustentar la necesidad de implementar un sistema predictivo automatizado con alertas tempranas.
         </p>
 
-        <h2 style={styles.subtitle}>Análisis de Precipitación</h2>
-        <div style={styles.rowContainer}>
-          {Object.entries(charts).filter(([titulo]) => titulo.includes('Precipitación')).map(([titulo, src]) => (
-            <div key={titulo} style={styles.chartCard}>
-              <h3 style={styles.chartTitle}>{titulo}</h3>
-              <img src={src} alt={titulo} style={styles.chartImageSmall} />
-            </div>
-          ))}
+        <h2 style={styles.subtitle}>💡 Prototipo</h2>
+
+        <h2 style={styles.subtitle}>📊 Análisis de Precipitación</h2>
+        {loading ? <p style={styles.loading}>🔄 Cargando gráficas...</p> : (
+          <div style={styles.rowContainer}>
+            {Object.entries(charts).filter(([titulo]) => titulo.includes('Precipitación')).map(([titulo, src]) => (
+              <div key={titulo} style={{ ...styles.chartCard, backgroundColor: '#234e70' }}>
+                <h3 style={styles.chartTitle}>{titulo}</h3>
+                <img src={src} alt={titulo} style={styles.chartImageSmall} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <h2 style={styles.subtitle}>🌊 Análisis de Nivel de Agua</h2>
+        {loading ? <p style={styles.loading}>🔄 Cargando gráficas...</p> : (
+          <div style={styles.rowContainer}>
+            {Object.entries(charts).filter(([titulo]) => titulo.includes('Nivel de Agua')).map(([titulo, src]) => (
+              <div key={titulo} style={{ ...styles.chartCard, backgroundColor: '#2a2f4a' }}>
+                <h3 style={styles.chartTitle}>{titulo}</h3>
+                <img src={src} alt={titulo} style={styles.chartImageSmall} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <h2 style={styles.subtitle}>🔍 Predicciones Hídricas</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
+          <section style={{ ...styles.panel, flex: '1 1 48%' }}>
+            <h3 style={styles.chartTitle}>🌧️ Predicción de Lluvias</h3>
+            <p style={styles.alert}>⚠️ Se prevé aumento del nivel del agua en julio con un 70% de probabilidad.</p>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={lluviaPrediccion?.tendencia || []}>
+                <XAxis dataKey="mes" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="probabilidad" stroke="#2196f3" strokeWidth={3} />
+              </LineChart>
+            </ResponsiveContainer>
+          </section>
+
+          <section style={{ ...styles.panel, flex: '1 1 48%' }}>
+            <h3 style={styles.chartTitle}>🔥 Predicción de Sequía</h3>
+            <p style={styles.alert}>⚠️ Se pronostica descenso del caudal en julio con un 65% de probabilidad de sequía.</p>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={sequiaPrediccion?.tendencia || []}>
+                <XAxis dataKey="mes" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="probabilidad" stroke="#ef5350" strokeWidth={3} />
+              </LineChart>
+            </ResponsiveContainer>
+          </section>
         </div>
 
-        <h2 style={styles.subtitle}>Análisis de Nivel de Agua</h2>
-        <div style={styles.rowContainer}>
-          {Object.entries(charts).filter(([titulo]) => titulo.includes('Nivel de Agua')).map(([titulo, src]) => (
-            <div key={titulo} style={styles.chartCard}>
-              <h3 style={styles.chartTitle}>{titulo}</h3>
-              <img src={src} alt={titulo} style={styles.chartImageSmall} />
-            </div>
-          ))}
-        </div>
-
-        <h2 style={styles.subtitle}>Presupuesto Estimado del Sistema</h2>
+        <h2 style={styles.subtitle}>💰 Presupuesto Estimado</h2>
         <table style={styles.table}>
           <thead>
             <tr>
@@ -116,84 +182,89 @@ export default function Propuesta() {
 
 const styles = {
   background: {
-    background: 'linear-gradient(to bottom right, #1e3c72, #2a5298)',
+    background: 'linear-gradient(to bottom right, #14213d, #1a2a6c)',
     minHeight: '100vh',
     color: 'white',
-    display: 'flex',
-    justifyContent: 'center',
     padding: '2rem',
   },
-  content: {
-    maxWidth: '1100px',
-    width: '100%',
+  container: {
+    maxWidth: '1200px',
+    margin: '0 auto',
   },
   title: {
     fontSize: '2.8rem',
-    marginBottom: '1rem',
-    fontWeight: 'bold',
-    color: '#ffffff',
     textAlign: 'center',
+    marginBottom: '2rem',
+    fontWeight: 'bold',
+    color: '#ffb703',
   },
   subtitle: {
-    fontSize: '1.9rem',
-    marginBottom: '1rem',
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontSize: '2rem',
+    margin: '2rem 0 1rem',
+    color: '#00e1ff',
   },
   text: {
-    fontSize: '1.3rem',
+    fontSize: '1.2rem',
     lineHeight: '1.7',
-    marginBottom: '2rem',
     textAlign: 'justify',
+  },
+  loading: {
+    textAlign: 'center',
+    fontStyle: 'italic',
+    marginBottom: '1rem',
   },
   rowContainer: {
     display: 'flex',
-    gap: '1rem',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: '2.5rem',
+    gap: '1.5rem',
+    marginBottom: '2rem',
   },
   chartCard: {
     flex: '1 1 calc(33% - 1rem)',
-    backgroundColor: '#2a4f8d',
-    borderRadius: '8px',
     padding: '1rem',
+    borderRadius: '10px',
     textAlign: 'center',
   },
   chartTitle: {
-    fontSize: '1.1rem',
-    marginBottom: '0.5rem',
     fontWeight: 'bold',
+    fontSize: '1rem',
+    marginBottom: '0.5rem',
   },
   chartImageSmall: {
     width: '100%',
     borderRadius: '6px',
     border: '2px solid white',
   },
-  button: {
-    backgroundColor: '#00bcd4',
-    color: 'white',
-    padding: '0.9rem 1.8rem',
-    fontSize: '1.1rem',
-    border: 'none',
+  panel: {
+    backgroundColor: '#263859',
+    padding: '1.5rem',
+    borderRadius: '10px',
+    marginBottom: '2rem',
+  },
+  alert: {
+    backgroundColor: '#ff9800',
+    color: 'black',
+    padding: '0.7rem',
+    fontWeight: 'bold',
+    textAlign: 'center',
     borderRadius: '8px',
-    cursor: 'pointer',
+    marginBottom: '1rem',
   },
   table: {
     width: '100%',
     backgroundColor: '#ffffff20',
     borderCollapse: 'collapse',
-    color: 'white',
     marginBottom: '2rem',
   },
-  th: {
-    border: '1px solid white',
-    padding: '0.8rem',
-    backgroundColor: '#1e3c72',
-    fontWeight: 'bold',
-  },
-  td: {
-    border: '1px solid white',
-    padding: '0.8rem',
+  button: {
+    backgroundColor: '#00bcd4',
+    color: 'white',
+    padding: '1rem 2rem',
+    fontSize: '1rem',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    display: 'block',
+    margin: '0 auto',
   },
 };
