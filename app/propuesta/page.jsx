@@ -122,10 +122,10 @@ export default function Propuesta() {
                   </div>
                 ))}
             </section>
- 
-<p style={styles.text}>
-           Los gráficos de precipitación mensual reflejan el comportamiento de las lluvias en tres estaciones clave de monitoreo del Antisana. En la estación <strong>P42 Ramón Huañuna</strong> se observa una fuerte variabilidad interanual, con picos superiores a los 300 mm desde 2015, posiblemente relacionados con fenómenos como El Niño. La estación <strong>P43 Limboasi</strong> muestra una serie más continua y estable entre 2008 y 2024, con máximos como el de julio de 2023 (230.6 mm), evidenciando un patrón estacional marcado. Finalmente, <strong>P55 Diguchi</strong> presenta valores más moderados y consistentes, entre 40 y 150 mm, pero con eventos intensos aislados como en 2016 y 2021, asociados a fenómenos de convección intensa como la ZCIT.
-</p>
+
+            <p style={styles.text}>
+              Los gráficos de precipitación mensual reflejan el comportamiento de las lluvias en tres estaciones clave de monitoreo del Antisana. En la estación <strong>P42 Ramón Huañuna</strong> se observa una fuerte variabilidad interanual, con picos superiores a los 300 mm desde 2015, posiblemente relacionados con fenómenos como El Niño. La estación <strong>P43 Limboasi</strong> muestra una serie más continua y estable entre 2008 y 2024, con máximos como el de julio de 2023 (230.6 mm), evidenciando un patrón estacional marcado. Finalmente, <strong>P55 Diguchi</strong> presenta valores más moderados y consistentes, entre 40 y 150 mm, pero con eventos intensos aislados como en 2016 y 2021, asociados a fenómenos de convección intensa como la ZCIT.
+            </p>
             <h2 style={styles.subtitle}>🌊 Análisis de Nivel de Agua</h2>
             <section style={styles.flexRow}>
               {Object.entries(charts)
@@ -139,12 +139,17 @@ export default function Propuesta() {
             </section>
           </>
         )}
+        
+        <h1 style={{ ...styles.subtitle, marginTop: '20px', marginBottom: '20px', textAlign: 'center' }}>
+          🧱 Prototipo
+        </h1>
+
 
         <h2 style={styles.subtitle}>🔍 Predicciones Hídricas</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
           <section style={{ ...styles.chartCard, backgroundColor: '#ffffff', color: '#000000', flex: '1 1 48%' }}>
             <h3 style={styles.panelTitle}>🌧️ Predicción de Lluvias</h3>
-<p style={styles.panelAlert}>⚠️ Se prevé aumento del nivel del agua en julio con un 70% de probabilidad.</p>
+            <p style={styles.panelAlert}>⚠️ Se prevé aumento del nivel del agua en julio con un 70% de probabilidad.</p>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={lluviaPrediccion?.tendencia || []}>
                 <XAxis dataKey="mes" />
@@ -251,13 +256,13 @@ const styles = {
     justifyContent: 'space-between',
   },
   panelTitle: {
-  color: '#1a237e',
-  fontSize: '1.2rem',
-  marginBottom: '0.5rem',
-  fontWeight: 'bold'
-},
-panelAlert: {
-  color: '#ef6c00',
-  marginBottom: '1rem'
-}
+    color: '#1a237e',
+    fontSize: '1.2rem',
+    marginBottom: '0.5rem',
+    fontWeight: 'bold'
+  },
+  panelAlert: {
+    color: '#ef6c00',
+    marginBottom: '1rem'
+  }
 };
