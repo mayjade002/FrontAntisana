@@ -106,7 +106,7 @@ export default function Home() {
       <section id="propuesta" style={styles.propuestaSection}>
         <h2 style={styles.titleLight}>Nuestra Propuesta</h2>
         <p style={styles.textLight}>
-          Desarrollar un sistema de predicción de precipitaciones avanzado que integre datos históricos y actuales con técnicas de inteligencia artificial y simulación hidrológica, permitiendo anticipar y predecir con precisión los niveles de precipitación y emitir alertas tempranas efectivas para prevenir desbordamientos y sequías que afecten a la comunidad, reduciendo así el riesgo de daños y pérdidas humanas y materiales.
+          Desarrollar un sistema de predicción de precipitaciones que integre datos históricos con técnicas de inteligencia artificial, permitiendo anticipar y predecir los niveles de precipitación para prevenir desbordamientos y sequías que afecten a la comunidad, reduciendo así el riesgo de daños y pérdidas humanas y materiales.
         </p>
         <Link href="/propuesta">
           <button style={styles.secondaryButton}>Leer más</button>
